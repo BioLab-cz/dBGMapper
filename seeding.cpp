@@ -492,17 +492,17 @@ void candi2candi(const vector<ms_seed> & vseed, const vector<PH_Node> &PHArray, 
 	struct PH_Node PHParent = PHArray[PHTidx/2];
 	int aliseqlen = 0;
 	int candpathlen = strlen(candidate.p_path);
-	ext_set.tau = PHParent.tau - PHArray[PHTidx].tau - 1;
+	ext_set.tau = PHParent.tau - candidate.tau[PHTidx % 2];
 	ext_set.orignseq = new char[gbit_para.kmer1Len/2+1]();
 	if(ext_set.dir == 'I')
 	{
 		strncpy(ext_set.orignseq, candidate.p_path, gbit_para.kmer1Len/2);
-		for(int i = candidate.start_seed_id + 1; i >= PHParent.start_seed_id; --i)
+		for(int i = PHParent.start_seed_id; i > candidate.cur_seed_id; --i)
 		{
 			aliseqlen += strlen(vseed[i].seed_segment);
 		}
 		ext_set.alignseq = new char[aliseqlen+1]();
-		for(int i = candidate.start_seed_id + 1; i >= PHParent.start_seed_id; --i)
+		for(int i = PHParent.start_seed_id; i > candidate.cur_seed_id; --i)
 		{
 			strcat(ext_set.alignseq,vseed[i].seed_segment);
 		}
@@ -511,12 +511,12 @@ void candi2candi(const vector<ms_seed> & vseed, const vector<PH_Node> &PHArray, 
 	else
 	{
 		strncpy(ext_set.orignseq, candidate.p_path+candpathlen-gbit_para.kmer1Len/2, gbit_para.kmer1Len/2);
-		for(int i = candidate.end_seed_id + 1; i <= PHParent.end_seed_id; ++i)
+		for(int i = candidate.cur_seed_id + 1; i <= PHParent.end_seed_id; ++i)
 		{
 			aliseqlen += strlen(vseed[i].seed_segment);
 		}
 		ext_set.alignseq = new char[aliseqlen+1]();
-		for(int i = candidate.end_seed_id + 1; i <= PHParent.end_seed_id; ++i)
+		for(int i = candidate.cur_seed_id + 1; i <= PHParent.end_seed_id; ++i)
 		{
 			strcat(ext_set.alignseq,vseed[i].seed_segment);
 		}
